@@ -1,7 +1,11 @@
 import axios from 'axios';
 import type { ApiResult } from '../types';
 
-export const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3001/api/v1';
+const fallbackApiUrl = import.meta.env.PROD
+  ? 'https://mini-erp-crm-operations-portal-rq8f.onrender.com/api/v1'
+  : 'http://localhost:3001/api/v1';
+
+export const API_URL = (import.meta.env.VITE_API_URL || fallbackApiUrl).replace(/\/$/, '');
 
 export const apiClient = axios.create({
   baseURL: API_URL,

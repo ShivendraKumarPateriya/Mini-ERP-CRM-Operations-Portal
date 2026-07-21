@@ -17,7 +17,8 @@ app.use(helmet());
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+      const isVercelPreview = Boolean(origin && /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin));
+      if (!origin || allowedOrigins.includes(origin) || isVercelPreview) return callback(null, true);
       return callback(new Error('Not allowed by CORS'));
     }
   })
