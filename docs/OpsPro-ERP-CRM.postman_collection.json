@@ -1,0 +1,73 @@
+{
+  "info": {
+    "name": "OpsPro ERP-CRM",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{token}}", "type": "string" }
+    ]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.data && json.data.token) pm.environment.set('token', json.data.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin@demo.com\",\n  \"password\": \"Admin@1234\"\n}" },
+            "url": "{{base_url}}/auth/login"
+          }
+        },
+        { "name": "Login Sales", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"email\": \"sales@demo.com\",\n  \"password\": \"Sales@1234\"\n}" }, "url": "{{base_url}}/auth/login" } },
+        { "name": "Login Warehouse", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"email\": \"warehouse@demo.com\",\n  \"password\": \"Whouse@1234\"\n}" }, "url": "{{base_url}}/auth/login" } },
+        { "name": "Login Accounts", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"email\": \"accounts@demo.com\",\n  \"password\": \"Accounts@1234\"\n}" }, "url": "{{base_url}}/auth/login" } },
+        { "name": "Me", "request": { "method": "GET", "url": "{{base_url}}/auth/me" } }
+      ]
+    },
+    {
+      "name": "Customers",
+      "item": [
+        { "name": "List Customers", "request": { "method": "GET", "url": "{{base_url}}/customers?page=1&limit=20&search=" } },
+        { "name": "Create Customer", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Sample Buyer\",\n  \"mobile\": \"+919900001111\",\n  \"email\": \"buyer@example.com\",\n  \"businessName\": \"Sample Traders\",\n  \"gstNumber\": \"27ABCDE1234F1Z5\",\n  \"type\": \"WHOLESALE\",\n  \"address\": \"Market Road, Pune\",\n  \"status\": \"LEAD\",\n  \"notes\": \"Created from Postman\"\n}" }, "url": "{{base_url}}/customers" } },
+        { "name": "Customer Detail", "request": { "method": "GET", "url": "{{base_url}}/customers/{{customer_id}}" } },
+        { "name": "Update Customer", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"status\": \"ACTIVE\"\n}" }, "url": "{{base_url}}/customers/{{customer_id}}" } },
+        { "name": "Add Follow-up", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"note\": \"Called customer and confirmed next order window.\"\n}" }, "url": "{{base_url}}/customers/{{customer_id}}/followups" } }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        { "name": "List Products", "request": { "method": "GET", "url": "{{base_url}}/products?page=1&limit=20&search=" } },
+        { "name": "Create Product", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Sample Product 1kg\",\n  \"sku\": \"SKU-SAMPLE-001\",\n  \"category\": \"Sample\",\n  \"unitPrice\": 99,\n  \"currentStock\": 50,\n  \"minStockAlert\": 10,\n  \"warehouseLocation\": \"S-01-01\"\n}" }, "url": "{{base_url}}/products" } },
+        { "name": "Product Detail", "request": { "method": "GET", "url": "{{base_url}}/products/{{product_id}}" } },
+        { "name": "Adjust Stock", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"productId\": \"{{product_id}}\",\n  \"quantity\": 5,\n  \"type\": \"IN\",\n  \"reason\": \"Manual adjustment\"\n}" }, "url": "{{base_url}}/stock/movement" } }
+      ]
+    },
+    {
+      "name": "Challans",
+      "item": [
+        { "name": "List Challans", "request": { "method": "GET", "url": "{{base_url}}/challans?page=1&limit=20" } },
+        { "name": "Create Draft Challan", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"customerId\": \"{{customer_id}}\",\n  \"status\": \"DRAFT\",\n  \"items\": [\n    { \"productId\": \"{{product_id}}\", \"quantity\": 2 }\n  ]\n}" }, "url": "{{base_url}}/challans" } },
+        { "name": "Challan Detail", "request": { "method": "GET", "url": "{{base_url}}/challans/{{challan_id}}" } },
+        { "name": "Confirm Challan", "request": { "method": "PUT", "url": "{{base_url}}/challans/{{challan_id}}/confirm" } },
+        { "name": "Cancel Challan", "request": { "method": "PUT", "url": "{{base_url}}/challans/{{challan_id}}/cancel" } }
+      ]
+    }
+  ]
+}

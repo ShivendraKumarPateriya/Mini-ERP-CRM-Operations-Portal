@@ -1,0 +1,16 @@
+node_modules
+dist
+.env
+.env.local
+.DS_Store
+*.log
+coverage
+.vercel
+.idea
+.vscode
+.local-postgres
+backend/.env
+frontend-dev.log
+frontend-dev.err.log
+backend-dev.log
+backend-dev.err.log
