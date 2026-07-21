@@ -5,7 +5,13 @@ const fallbackApiUrl = import.meta.env.PROD
   ? 'https://mini-erp-crm-operations-portal-rq8f.onrender.com/api/v1'
   : 'http://localhost:3001/api/v1';
 
-export const API_URL = (import.meta.env.VITE_API_URL || fallbackApiUrl).replace(/\/$/, '');
+function normalizeApiUrl(value: string) {
+  const trimmed = value.trim();
+  const markdownLink = trimmed.match(/^\[[^\]]+]\((https?:\/\/[^)]+)\)(.*)$/);
+  return (markdownLink ? `${markdownLink[1]}${markdownLink[2]}` : trimmed).replace(/\/$/, '');
+}
+
+export const API_URL = normalizeApiUrl(import.meta.env.VITE_API_URL || fallbackApiUrl);
 
 export const apiClient = axios.create({
   baseURL: API_URL,
